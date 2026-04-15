@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<categories>
+    <category>
+        <id>1</id>
+        <name>Books</name>
+        <slug>books</slug>
+        <icon>📚</icon>
+        <count>250+</count>
+        <description>Textbooks, novels, study guides</description>
+    </category>
+    <category>
+        <id>2</id>
+        <name>Electronics</name>
+        <slug>electronics</slug>
+        <icon>💻</icon>
+        <count>180+</count>
+        <description>Laptops, phones, accessories</description>
+    </category>
+    <category>
+        <id>3</id>
+        <name>Furniture</name>
+        <slug>furniture</slug>
+        <icon>🪑</icon>
+        <count>120+</count>
+        <description>Desks, chairs, storage</description>
+    </category>
+    <category>
+        <id>4</id>
+        <name>Accessories</name>
+        <slug>accessories</slug>
+        <icon>🎧</icon>
+        <count>300+</count>
+        <description>Headphones, bags, gadgets</description>
+    </category>
+    <category>
+        <id>5</id>
+        <name>Clothing</name>
+        <slug>clothing</slug>
+        <icon>👕</icon>
+        <count>150+</count>
+        <description>Casual wear, sports gear</description>
+    </category>
+    <category>
+        <id>6</id>
+        <name>Other</name>
+        <slug>other</slug>
+        <icon>📦</icon>
+        <count>100+</count>
+        <description>Miscellaneous items</description>
+    </category>
+</categories>

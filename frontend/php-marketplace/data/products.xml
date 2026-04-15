@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+    <product>
+        <id>1</id>
+        <name>Sony Wireless Headphones</name>
+        <description>Barely used Sony WH-1000XM4 headphones in excellent condition. Comes with original box, charging cable, and carrying case. Industry-leading noise cancellation and premium sound quality.</description>
+        <price>45</price>
+        <category>Electronics</category>
+        <condition>Like New</condition>
+        <image>https://images.unsplash.com/photo-1762028892204-2ef68f7fcfd5?w=400</image>
+        <seller_id>1</seller_id>
+        <views>234</views>
+        <featured>true</featured>
+        <status>active</status>
+        <created_at>2026-04-11</created_at>
+    </product>
+    <product>
+        <id>2</id>
+        <name>Calculus &amp; Physics Textbooks</name>
+        <description>Bundle of calculus and physics textbooks. Perfect for engineering students. Minor highlighting, all pages intact. Great condition.</description>
+        <price>30</price>
+        <category>Books</category>
+        <condition>Good</condition>
+        <image>https://images.unsplash.com/photo-1585521551422-497df464aa43?w=400</image>
+        <seller_id>1</seller_id>
+        <views>145</views>
+        <featured>true</featured>
+        <status>active</status>
+        <created_at>2026-04-10</created_at>
+    </product>
+    <product>
+        <id>3</id>
+        <name>Modern Office Chair</name>
+        <description>Ergonomic office chair with adjustable height and lumbar support. Perfect for long study sessions. Mesh back for breathability.</description>
+        <price>80</price>
+        <category>Furniture</category>
+        <condition>Excellent</condition>
+        <image>https://images.unsplash.com/photo-1750306957820-f778b67c4e13?w=400</image>
+        <seller_id>2</seller_id>
+        <views>312</views>
+        <featured>true</featured>
+        <status>active</status>
+        <created_at>2026-04-09</created_at>
+    </product>
+    <product>
+        <id>4</id>
+        <name>MacBook Pro 2020</name>
+        <description>13-inch MacBook Pro 2020 model. 8GB RAM, 256GB SSD. Works perfectly, minor wear on the case. Includes original charger.</description>
+        <price>650</price>
+        <category>Electronics</category>
+        <condition>Good</condition>
+        <image>https://images.unsplash.com/photo-1701576766277-c6160505581d?w=400</image>
+        <seller_id>3</seller_id>
+        <views>521</views>
+        <featured>true</featured>
+        <status>active</status>
+        <created_at>2026-04-08</created_at>
+    </product>
+    <product>
+        <id>5</id>
+        <name>Computer Science Textbooks</name>
+        <description>Complete set of CS textbooks including Data Structures, Algorithms, and Operating Systems. All in great condition with minimal writing.</description>
+        <price>25</price>
+        <category>Books</category>
+        <condition>Good</condition>
+        <image>https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400</image>
+        <seller_id>1</seller_id>
+        <views>89</views>
+        <featured>false</featured>
+        <status>active</status>
+        <created_at>2026-04-07</created_at>
+    </product>
+    <product>
+        <id>6</id>
+        <name>Apple AirPods Pro</name>
+        <description>Second generation AirPods Pro with noise cancellation. Excellent battery life, comes with all ear tip sizes and charging case.</description>
+        <price>120</price>
+        <category>Accessories</category>
+        <condition>Like New</condition>
+        <image>https://images.unsplash.com/photo-1770292170233-5d9e235ec739?w=400</image>
+        <seller_id>2</seller_id>
+        <views>178</views>
+        <featured>false</featured>
+        <status>active</status>
+        <created_at>2026-04-06</created_at>
+    </product>
+    <product>
+        <id>7</id>
+        <name>Ergonomic Desk Chair</name>
+        <description>High-quality ergonomic chair with adjustable armrests and headrest. Perfect for studying. Used for one semester only.</description>
+        <price>95</price>
+        <category>Furniture</category>
+        <condition>Excellent</condition>
+        <image>https://images.unsplash.com/photo-1762423992203-552b7c671b92?w=400</image>
+        <seller_id>3</seller_id>
+        <views>245</views>
+        <featured>false</featured>
+        <status>active</status>
+        <created_at>2026-04-05</created_at>
+    </product>
+    <product>
+        <id>8</id>
+        <name>Engineering Textbook Set</name>
+        <description>Complete set of engineering mechanics and thermodynamics books. All current editions with solutions manuals.</description>
+        <price>40</price>
+        <category>Books</category>
+        <condition>Good</condition>
+        <image>https://images.unsplash.com/photo-1664095885286-65fb80ba335d?w=400</image>
+        <seller_id>1</seller_id>
+        <views>132</views>
+        <featured>false</featured>
+        <status>active</status>
+        <created_at>2026-04-04</created_at>
+    </product>
+</products>

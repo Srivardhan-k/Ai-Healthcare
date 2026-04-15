@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testimonials>
+    <testimonial>
+        <id>1</id>
+        <name>Sarah Johnson</name>
+        <rating>5</rating>
+        <text>Found amazing deals on textbooks. Saved over $200 this semester!</text>
+        <date>2026-03-15</date>
+    </testimonial>
+    <testimonial>
+        <id>2</id>
+        <name>Mike Chen</name>
+        <rating>5</rating>
+        <text>Sold my old laptop in just 2 days. Super easy and safe platform.</text>
+        <date>2026-03-20</date>
+    </testimonial>
+    <testimonial>
+        <id>3</id>
+        <name>Emily Davis</name>
+        <rating>5</rating>
+        <text>Best place to find affordable furniture for my dorm room.</text>
+        <date>2026-03-25</date>
+    </testimonial>
+</testimonials>
