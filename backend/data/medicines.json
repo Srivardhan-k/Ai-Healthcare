@@ -1,0 +1,358 @@
+[
+  {
+    "name": "paracetamol",
+    "type": "painkiller",
+    "avoid_with": [
+      "alcohol",
+      "warfarin"
+    ],
+    "conditions_not_allowed": [
+      "liver disease",
+      "hepatitis"
+    ],
+    "before_after_food": "after food"
+  },
+  {
+    "name": "ibuprofen",
+    "type": "nsaid",
+    "avoid_with": [
+      "aspirin",
+      "lisinopril",
+      "clopidogrel"
+    ],
+    "conditions_not_allowed": [
+      "asthma",
+      "peptic ulcer",
+      "kidney disease",
+      "pregnancy"
+    ],
+    "before_after_food": "after food"
+  },
+  {
+    "name": "amoxicillin",
+    "type": "antibiotic",
+    "avoid_with": [
+      "methotrexate"
+    ],
+    "conditions_not_allowed": [
+      "penicillin allergy",
+      "mononucleosis"
+    ],
+    "before_after_food": "before food"
+  },
+  {
+    "name": "metformin",
+    "type": "diabetes",
+    "avoid_with": [
+      "alcohol",
+      "furosemide"
+    ],
+    "conditions_not_allowed": [
+      "kidney disease",
+      "severe liver disease"
+    ],
+    "before_after_food": "after food"
+  },
+  {
+    "name": "atorvastatin",
+    "type": "cholesterol",
+    "avoid_with": [
+      "grapefruit juice",
+      "clarithromycin"
+    ],
+    "conditions_not_allowed": [
+      "active liver disease",
+      "pregnancy"
+    ],
+    "before_after_food": "after food"
+  },
+  {
+    "name": "crocin",
+    "type": "painkiller",
+    "avoid_with": [
+      "alcohol",
+      "warfarin"
+    ],
+    "conditions_not_allowed": [
+      "liver disease",
+      "hepatitis"
+    ],
+    "before_after_food": "after food"
+  },
+  {
+    "name": "dolo 650",
+    "type": "painkiller",
+    "avoid_with": [
+      "alcohol",
+      "warfarin"
+    ],
+    "conditions_not_allowed": [
+      "liver disease",
+      "hepatitis"
+    ],
+    "before_after_food": "after food"
+  },
+  {
+    "name": "combiflam",
+    "type": "nsaid",
+    "avoid_with": [
+      "aspirin",
+      "clopidogrel",
+      "alcohol"
+    ],
+    "conditions_not_allowed": [
+      "asthma",
+      "peptic ulcer",
+      "kidney disease",
+      "liver disease"
+    ],
+    "before_after_food": "after food"
+  },
+  {
+    "name": "azithromycin",
+    "type": "antibiotic",
+    "avoid_with": [
+      "antacids",
+      "digoxin"
+    ],
+    "conditions_not_allowed": [
+      "liver disease",
+      "prolonged qt interval"
+    ],
+    "before_after_food": "before food"
+  },
+  {
+    "name": "cetirizine",
+    "type": "antihistamine",
+    "avoid_with": [
+      "alcohol",
+      "sedatives"
+    ],
+    "conditions_not_allowed": [
+      "severe kidney disease"
+    ],
+    "before_after_food": "anytime"
+  },
+  {
+    "name": "levocetirizine",
+    "type": "antihistamine",
+    "avoid_with": [
+      "alcohol",
+      "sedatives"
+    ],
+    "conditions_not_allowed": [
+      "severe kidney disease",
+      "end stage renal disease"
+    ],
+    "before_after_food": "anytime"
+  },
+  {
+    "name": "pantoprazole",
+    "type": "antacid",
+    "avoid_with": [
+      "methotrexate",
+      "ketoconazole"
+    ],
+    "conditions_not_allowed": [
+      "severe liver disease"
+    ],
+    "before_after_food": "before food"
+  },
+  {
+    "name": "omeprazole",
+    "type": "antacid",
+    "avoid_with": [
+      "clopidogrel",
+      "methotrexate"
+    ],
+    "conditions_not_allowed": [
+      "severe liver disease"
+    ],
+    "before_after_food": "before food"
+  },
+  {
+    "name": "ranitidine",
+    "type": "antacid",
+    "avoid_with": [
+      "ketoconazole",
+      "glipizide"
+    ],
+    "conditions_not_allowed": [
+      "porphyria",
+      "severe kidney disease"
+    ],
+    "before_after_food": "before food"
+  },
+  {
+    "name": "diclofenac",
+    "type": "nsaid",
+    "avoid_with": [
+      "warfarin",
+      "lithium",
+      "diuretics"
+    ],
+    "conditions_not_allowed": [
+      "heart failure",
+      "peptic ulcer",
+      "kidney disease",
+      "pregnancy"
+    ],
+    "before_after_food": "after food"
+  },
+  {
+    "name": "insulin",
+    "type": "diabetes",
+    "avoid_with": [
+      "beta_blockers",
+      "alcohol"
+    ],
+    "conditions_not_allowed": [
+      "hypoglycemia"
+    ],
+    "before_after_food": "before food"
+  },
+  {
+    "name": "glimepiride",
+    "type": "diabetes",
+    "avoid_with": [
+      "alcohol",
+      "nsaid"
+    ],
+    "conditions_not_allowed": [
+      "type 1 diabetes",
+      "severe liver disease"
+    ],
+    "before_after_food": "before food"
+  },
+  {
+    "name": "telmisartan",
+    "type": "hypertension",
+    "avoid_with": [
+      "nsaid",
+      "lithium",
+      "potassium supplements"
+    ],
+    "conditions_not_allowed": [
+      "pregnancy",
+      "severe liver disease",
+      "biliary obstructive disorders"
+    ],
+    "before_after_food": "anytime"
+  },
+  {
+    "name": "amlodipine",
+    "type": "hypertension",
+    "avoid_with": [
+      "simvastatin",
+      "clarithromycin"
+    ],
+    "conditions_not_allowed": [
+      "severe hypotension",
+      "cardiogenic shock"
+    ],
+    "before_after_food": "anytime"
+  },
+  {
+    "name": "losartan",
+    "type": "hypertension",
+    "avoid_with": [
+      "nsaid",
+      "potassium supplements",
+      "lithium"
+    ],
+    "conditions_not_allowed": [
+      "pregnancy",
+      "severe liver disease"
+    ],
+    "before_after_food": "anytime"
+  },
+  {
+    "name": "montelukast",
+    "type": "asthma",
+    "avoid_with": [
+      "phenytoin",
+      "phenobarbital",
+      "rifampin"
+    ],
+    "conditions_not_allowed": [
+      "acute asthma attacks",
+      "severe liver impairment"
+    ],
+    "before_after_food": "anytime"
+  },
+  {
+    "name": "salbutamol",
+    "type": "asthma",
+    "avoid_with": [
+      "beta_blockers",
+      "diuretics"
+    ],
+    "conditions_not_allowed": [
+      "tachyarrhythmia",
+      "severe cardiovascular disease"
+    ],
+    "before_after_food": "anytime"
+  },
+  {
+    "name": "thyroxine",
+    "type": "thyroid",
+    "avoid_with": [
+      "iron",
+      "calcium supplements",
+      "antacids"
+    ],
+    "conditions_not_allowed": [
+      "untreated adrenal insufficiency",
+      "myocardial infarction"
+    ],
+    "before_after_food": "before food"
+  },
+  {
+    "name": "clopidogrel",
+    "type": "blood thinner",
+    "avoid_with": [
+      "omeprazole",
+      "nsaid",
+      "warfarin",
+      "aspirin"
+    ],
+    "conditions_not_allowed": [
+      "active bleeding",
+      "peptic ulcer",
+      "intracranial hemorrhage"
+    ],
+    "before_after_food": "anytime"
+  },
+  {
+    "name": "warfarin",
+    "type": "blood thinner",
+    "avoid_with": [
+      "aspirin",
+      "nsaid",
+      "amoxicillin",
+      "alcohol"
+    ],
+    "conditions_not_allowed": [
+      "active bleeding",
+      "pregnancy",
+      "recent surgery"
+    ],
+    "before_after_food": "anytime"
+  },
+   {
+    "name": "Panked-DSR",
+    "type": "nausea",
+    "avoid_with": [
+      "aspirin",
+      "nsaid",
+      "amoxicillin",
+      "alcohol"
+    ],
+    "conditions_not_allowed": [
+      "active bleeding",
+      "pregnancy",
+      "recent surgery"
+    ],
+    "before_after_food": "anytime"
+  }
+]

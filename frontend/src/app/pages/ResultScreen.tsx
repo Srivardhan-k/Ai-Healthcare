@@ -15,7 +15,7 @@ interface ResultData {
   advisory?: string;
 }
 
-const API = "http://localhost:5001/api";
+import { api } from "../../api/client";
 
 export function ResultScreen() {
   const location = useLocation();
@@ -28,13 +28,12 @@ export function ResultScreen() {
   useEffect(() => {
     const checkMedicine = async () => {
       try {
-        const res = await fetch(`${API}/medicines/check`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ medicine: medicineName }),
-        });
-        const data = await res.json();
-        setResult(data);
+        const { data } = await api.medicine.check([medicineName]);
+        if (data && data.individual && data.individual.length > 0) {
+           setResult(data.individual[0] as ResultData);
+        } else if (data && data.status) {
+           setResult(data as ResultData);
+        }
       } catch {
         // Fallback to safe default if backend is unreachable
         setError(true);
@@ -84,7 +83,8 @@ export function ResultScreen() {
     },
   };
 
-  const config = statusConfig[result.status];
+  const normalizedStatus = (result.status?.toLowerCase() || "safe") as keyof typeof statusConfig;
+  const config = statusConfig[normalizedStatus] || statusConfig.safe;
   const Icon = config.icon;
 
 

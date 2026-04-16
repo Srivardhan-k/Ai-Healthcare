@@ -71,6 +71,15 @@ CREATE TABLE IF NOT EXISTS risk_predictions (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TABLE IF NOT EXISTS medicine_knowledge_base (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    type TEXT,
+    avoid_with TEXT DEFAULT '',
+    conditions_not_allowed TEXT DEFAULT '',
+    timing TEXT DEFAULT ''
+);
+
 -- Seed default user (single-user offline mode)
 INSERT OR IGNORE INTO users (id, name, age, height, weight, allergies, conditions)
 VALUES (1, 'Sarah Johnson', 28, 165, 62, 'Penicillin, Peanuts', 'Mild Asthma, Hypertension');

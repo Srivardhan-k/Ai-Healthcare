@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 
 
 function figmaAssetResolver() {
@@ -23,6 +24,20 @@ export default defineConfig({
     // Tailwind is not being actively used – do not remove them
     react(),
     tailwindcss(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'MediGuard AI',
+        short_name: 'MediGuard',
+        description: 'AI Healthcare Management System',
+        theme_color: '#3b82f6',
+        icons: [{
+          src: '/icon.png',
+          sizes: '192x192',
+          type: 'image/png'
+        }]
+      }
+    }),
   ],
   resolve: {
     alias: {

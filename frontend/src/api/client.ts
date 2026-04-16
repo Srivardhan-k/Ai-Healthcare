@@ -66,10 +66,10 @@ export const api = {
 
   // Schedule Endpoints
   schedule: {
-    /** Connects to /schedule for medication tasks */
+    /** Connects to /scheduler for medication tasks */
     getToday: () => handleRequest(apiClient.get('/scheduler/today')),
-    addTask: (name: string, dosage: string, time: string) => handleRequest(apiClient.post('/scheduler/add', { name, dosage, time })),
-    markTaken: (taskId: number) => handleRequest(apiClient.post(`/scheduler/take/${taskId}`)),
+    addTask: (name: string, dosage: string, time: string) => handleRequest(apiClient.post('/scheduler', { name, dosage, time })),
+    markTaken: (taskId: number) => handleRequest(apiClient.patch(`/scheduler/${taskId}/taken`)),
   },
 
   // Risk Prediction Endpoints

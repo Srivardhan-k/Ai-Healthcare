@@ -20,6 +20,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 import re
+import os
+import json
 
 
 # ---------------------------------------------------------------------------
@@ -306,14 +308,38 @@ class MedicineSafetyChecker:
         return re.sub(r"[^a-z0-9 ]", "", text.lower().strip())
 
     def _find_medicine(self, name: str) -> tuple[str | None, dict | None]:
-        """Return (canonical_name, entry) or (None, None)."""
+        """Return (canonical_name, entry) or (None, None). Fallbacks to SQLite dynamic query."""
         n = self._normalize(name)
+        
+        # 1. Check in-memory fast caching heuristics (Legacy hardcoded dictionary mappings)
         for key, entry in self.db.items():
             if n == key or n in [self._normalize(a) for a in entry.get("aliases", [])]:
                 return key, entry
-            # Partial match (e.g. "ibuprofen 400mg" → "ibuprofen")
             if key in n or any(self._normalize(a) in n for a in entry.get("aliases", [])):
                 return key, entry
+                
+        # 2. Query persistent SQLite storage registry if not found manually
+        try:
+            from app.database import get_db
+            db_cursor = get_db()
+            med_row = db_cursor.execute("SELECT * FROM medicine_knowledge_base WHERE name LIKE ?", (f"%{n}%",)).fetchone()
+            if med_row:
+                key = med_row['name'].lower()
+                entry = {
+                    "aliases": [key],
+                    "class": med_row['type'],
+                    "interactions": [x.strip() for x in (med_row['avoid_with'] or '').split(',') if x.strip()],
+                    "contraindications": [x.strip() for x in (med_row['conditions_not_allowed'] or '').split(',') if x.strip()],
+                    "food": "before" if "before" in (med_row['timing'] or '').lower() else ("any" if "any" in (med_row['timing'] or '').lower() else "after"),
+                    "timing_note": med_row['timing'] or '',
+                    "safe_with_fitness": True, 
+                }
+                # Load persistent SQL into rapid DB array for subsequent heuristic calls
+                self.db[key] = entry
+                return key, entry
+        except Exception:
+            pass # Fails cleanly offline if app_context is dropped
+
         return None, None
 
     # ------------------------------------------------------------------

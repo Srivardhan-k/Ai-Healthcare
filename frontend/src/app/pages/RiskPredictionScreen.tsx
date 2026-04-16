@@ -6,7 +6,7 @@ import { Input } from "../components/ui/input";
 import { Card } from "../components/ui/card";
 import { Textarea } from "../components/ui/textarea";
 
-const API = "http://localhost:5001/api";
+import { api } from "../../api/client";
 
 export function RiskPredictionScreen() {
   const [age, setAge] = useState("28");
@@ -18,13 +18,10 @@ export function RiskPredictionScreen() {
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
     try {
-      const res = await fetch(`${API}/risk/predict`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ age: Number(age), bmi: Number(bmi), symptoms }),
-      });
-      const data = await res.json();
-      setResult({ risk: data.risk, level: data.level, expl: data.expl });
+      const { data } = await api.risk.predictRisk(Number(age), Number(bmi), symptoms);
+      if (data) {
+         setResult({ risk: data.risk, level: data.level, expl: data.expl });
+      }
     } catch {
       // Offline fallback
       const calcRisk = Math.min(15 + (Number(age) > 50 ? 20 : 0) + (Number(bmi) > 25 ? 15 : 0), 99);
