@@ -39,6 +39,10 @@ export default defineConfig({
       }
     }),
   ],
+  server: {
+    host: true, // Allow access from all network interfaces (127.0.0.1, 192.168.x.x, etc)
+    port: 5175,  // Explicit port (can be changed if needed)
+  },
   resolve: {
     alias: {
       // Alias @ to the src directory

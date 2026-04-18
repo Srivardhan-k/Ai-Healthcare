@@ -8,6 +8,7 @@ import { ProfileScreen } from "./pages/ProfileScreen";
 import { NotFound } from "./pages/NotFound";
 import { SchedulerScreen } from "./pages/SchedulerScreen";
 import { RiskPredictionScreen } from "./pages/RiskPredictionScreen";
+import { ChatBot } from "./pages/ChatBot";  // NEW: AI Chatbot
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
       { path: "profile", Component: ProfileScreen },
       { path: "scheduler", Component: SchedulerScreen },
       { path: "risk-prediction", Component: RiskPredictionScreen },
+      { path: "chat", Component: ChatBot },  // NEW: Chat route
       { path: "*", Component: NotFound },
     ],
   },

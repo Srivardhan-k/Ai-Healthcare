@@ -36,6 +36,36 @@ class SchedulerService:
         execute_db('UPDATE medication_schedule SET taken = 1 WHERE id = ? AND user_id = ?', [task_id, self.user_id])
         return True
 
+    def get_overdue_medications(self):
+        """Get all medications that are overdue (past scheduled time and not taken)."""
+        now = datetime.now()
+        today_date = now.date().isoformat()
+        
+        # Get all untaken tasks for today
+        tasks = query_db('SELECT * FROM medication_schedule WHERE user_id = ? AND date = ? AND taken = 0', [self.user_id, today_date])
+        
+        overdue = []
+        for task in tasks:
+            try:
+                task_time_str = task['scheduled_time']
+                task_time = datetime.strptime(f"{today_date} {task_time_str}", "%Y-%m-%d %I:%M %p")
+                
+                # Check if current time is past scheduled time
+                if now > task_time:
+                    minutes_overdue = int((now - task_time).total_seconds() / 60)
+                    overdue.append({
+                        'id': task['id'],
+                        'name': task['name'],
+                        'dosage': task['dosage'],
+                        'scheduled_time': task['scheduled_time'],
+                        'minutes_overdue': minutes_overdue,
+                        'severity': 'critical' if minutes_overdue >= 60 else 'warning'
+                    })
+            except Exception as e:
+                print(f"Error parsing time for task {task['id']}: {e}")
+        
+        return overdue
+
     def check_for_missed_doses(self):
         """
         Check for doses that are past their scheduled time and not taken.

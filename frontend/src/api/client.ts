@@ -1,7 +1,24 @@
 import axios, { AxiosError } from 'axios';
 
-// Base URL is configurable via environment variables, defaulting to local backend
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
+// Dynamic API URL - works on both mobile and desktop
+function getBaseURL(): string {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+
+  const hostname = window.location.hostname;
+  const port = 5001;
+
+  // If on localhost/127.0.0.1, use localhost (desktop)
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return `http://localhost:${port}/api`;
+  }
+
+  // Otherwise use the current hostname (works for mobile on network)
+  return `http://${hostname}:${port}/api`;
+}
+
+const BASE_URL = getBaseURL();
 
 /**
  * Core Axios Request Configuration
@@ -70,6 +87,7 @@ export const api = {
     getToday: () => handleRequest(apiClient.get('/scheduler/today')),
     addTask: (name: string, dosage: string, time: string) => handleRequest(apiClient.post('/scheduler', { name, dosage, time })),
     markTaken: (taskId: number) => handleRequest(apiClient.patch(`/scheduler/${taskId}/taken`)),
+    getOverdue: () => handleRequest(apiClient.get('/scheduler/overdue')),
   },
 
   // Risk Prediction Endpoints

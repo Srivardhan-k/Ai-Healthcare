@@ -72,6 +72,16 @@ def get_status():
     })
 
 
+@scheduler_bp.route('/scheduler/overdue', methods=['GET'])
+def get_overdue_medications():
+    """Get list of overdue medications (past scheduled time and not yet taken)."""
+    overdue = scheduler_service.get_overdue_medications()
+    return jsonify({
+        'overdue_count': len(overdue),
+        'medications': overdue
+    })
+
+
 @scheduler_bp.route('/scheduler/check', methods=['POST'])
 def trigger_check():
     """Manually trigger the missed dose detection engine."""

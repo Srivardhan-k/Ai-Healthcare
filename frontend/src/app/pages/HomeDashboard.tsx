@@ -1,39 +1,75 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
-import { Activity, Footprints, Moon, Droplets, AlertCircle, Scan, Plus, CalendarClock, BrainCircuit } from "lucide-react";
+import { Activity, Footprints, Moon, Droplets, AlertCircle, Scan, Plus, CalendarClock, BrainCircuit, MessageCircle, User } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
+import { api } from "../../api/client";
 
-const API = "http://localhost:5001/api";
+interface OverdueMedication {
+  id: number;
+  name: string;
+  dosage: string;
+  scheduled_time: string;
+  minutes_overdue: number;
+  severity: 'warning' | 'critical';
+}
 
 export function HomeDashboard() {
   const [dailyStats, setDailyStats] = useState({ steps: 0, sleep: 0, water: 0 });
   const [healthScore, setHealthScore] = useState(50);
   const [activeAlerts, setActiveAlerts] = useState<{ id: number; type: string; title: string; message: string; severity: string }[]>([]);
+  const [overdueMeds, setOverdueMeds] = useState<OverdueMedication[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [fitnessRes, scoreRes, alertsRes] = await Promise.all([
-          fetch(`${API}/fitness/today`),
-          fetch(`${API}/fitness/score`),
-          fetch(`${API}/alerts`),
+        const [fitnessRes, scoreRes, alertsRes, overdueRes] = await Promise.all([
+          api.fitness.getToday(),
+          api.fitness.getScore(),
+          fetch(`${getBaseURL()}/alerts`),
+          api.schedule.getOverdue(),
         ]);
-        const fitness = await fitnessRes.json();
-        const score = await scoreRes.json();
+        
+        const fitness = fitnessRes.data;
+        const score = scoreRes.data;
         const alerts = await alertsRes.json();
-        setDailyStats({ steps: fitness.steps, sleep: fitness.sleep, water: fitness.water });
-        setHealthScore(score.health_score);
-        setActiveAlerts(alerts);
-      } catch {
+        const overdue = overdueRes.data;
+        
+        setDailyStats({ 
+          steps: fitness?.steps || 0, 
+          sleep: fitness?.sleep || 0, 
+          water: fitness?.water || 0 
+        });
+        setHealthScore(score?.health_score || 50);
+        setActiveAlerts(alerts || []);
+        setOverdueMeds(overdue?.medications || []);
+      } catch (err) {
+        console.error('Failed to fetch home data:', err);
         // Backend unavailable — keep defaults silently
       } finally {
         setLoading(false);
       }
     };
     fetchData();
+    
+    // Refresh overdue medications every 30 seconds
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  // Helper function to get API base URL (same as in client.ts)
+  function getBaseURL(): string {
+    if (import.meta.env.VITE_API_BASE_URL) {
+      return import.meta.env.VITE_API_BASE_URL;
+    }
+    const hostname = window.location.hostname;
+    const port = 5001;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return `http://localhost:${port}/api`;
+    }
+    return `http://${hostname}:${port}/api`;
+  }
 
   const getHealthStatus = (score: number) => {
     if (score >= 80) return { color: "bg-emerald-500", text: "Excellent", textColor: "text-emerald-700" };
@@ -118,6 +154,34 @@ export function HomeDashboard() {
 
         {/* Alerts Section */}
         <div className="space-y-3">
+          {/* Overdue Medications Alerts */}
+          {overdueMeds.length > 0 && (
+            <Card className="p-4 bg-red-50 border border-red-200 rounded-xl">
+              <div className="flex gap-3 mb-3">
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h3 className="font-medium text-red-900 mb-1">Overdue Medications</h3>
+                  <p className="text-sm text-red-700">You have {overdueMeds.length} medication(s) past due time</p>
+                </div>
+              </div>
+              <div className="space-y-2 ml-8">
+                {overdueMeds.map(med => (
+                  <div key={med.id} className="text-sm">
+                    <p className="font-medium text-red-900">{med.name} ({med.dosage})</p>
+                    <p className="text-red-700 text-xs">
+                      Scheduled: {med.scheduled_time} • {med.minutes_overdue} minute{med.minutes_overdue !== 1 ? 's' : ''} late
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <Link to="/scheduler" className="block mt-3">
+                <Button className="w-full h-9 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm">
+                  Take Now
+                </Button>
+              </Link>
+            </Card>
+          )}
+
           {activeAlerts.map(alert => {
             const c = getAlertColors(alert.severity);
             return (
@@ -147,6 +211,10 @@ export function HomeDashboard() {
                 <CalendarClock className="w-6 h-6" />
                 <span className="text-[10px] sm:text-xs font-medium">Schedule</span>
               </Link>
+              <Link to="/chat" className="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600">
+                <MessageCircle className="w-6 h-6" />
+                <span className="text-[10px] sm:text-xs font-medium">Chat</span>
+              </Link>
               <Link to="/risk-prediction" className="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600">
                 <BrainCircuit className="w-6 h-6" />
                 <span className="text-[10px] sm:text-xs font-medium">AI Risk</span>
@@ -156,9 +224,7 @@ export function HomeDashboard() {
                 <span className="text-[10px] sm:text-xs font-medium">Fitness</span>
               </Link>
               <Link to="/profile" className="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+                <User className="w-6 h-6" />
                 <span className="text-[10px] sm:text-xs font-medium">Profile</span>
               </Link>
             </div>

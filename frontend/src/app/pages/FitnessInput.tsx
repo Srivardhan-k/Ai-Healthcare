@@ -1,23 +1,78 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ArrowLeft, Footprints, Moon, Droplets, Save, Activity, Calendar } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card } from "../components/ui/card";
+import { api } from "../../api/client";
 
 export function FitnessInput() {
-  const [steps, setSteps] = useState("8234");
-  const [sleep, setSleep] = useState("7.5");
-  const [water, setWater] = useState("2.1");
+  const [steps, setSteps] = useState("0");
+  const [sleep, setSleep] = useState("0");
+  const [water, setWater] = useState("0");
   const [saved, setSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  // Load data from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('fitnessData');
+      if (saved) {
+        const data = JSON.parse(saved);
+        setSteps(data.steps || "0");
+        setSleep(data.sleep || "0");
+        setWater(data.water || "0");
+      }
+    } catch (err) {
+      console.error('Failed to load fitness data from storage:', err);
+    }
+  }, []);
+
+  // Auto-save to localStorage whenever state changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('fitnessData', JSON.stringify({
+        steps: steps || "0",
+        sleep: sleep || "0",
+        water: water || "0",
+        timestamp: new Date().toISOString()
+      }));
+    } catch (err) {
+      console.error('Failed to save fitness data to storage:', err);
+    }
+  }, [steps, sleep, water]);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    setError(null);
+    
+    try {
+      const stepsNum = parseInt(steps) || 0;
+      const sleepNum = parseFloat(sleep) || 0;
+      const waterNum = parseFloat(water) || 0;
+
+      const result = await api.fitness.saveData(stepsNum, sleepNum, waterNum);
+      
+      if (result.error) {
+        console.warn('API save failed, using localStorage:', result.error);
+        // Still consider it success since we have localStorage backup
+      }
+      
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      console.error('Failed to save fitness data:', err);
+      setError('Failed to sync with server, but data is saved locally');
+      // Reset error after 3 seconds
+      setTimeout(() => setError(null), 3000);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-md mx-auto px-6 py-4 flex items-center gap-3">
@@ -62,6 +117,7 @@ export function FitnessInput() {
               onChange={(e) => setSteps(e.target.value)}
               className="h-12 text-lg rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
               placeholder="0"
+              inputMode="numeric"
             />
             <div className="mt-3 h-2 bg-gray-100 rounded-full overflow-hidden">
               <div
@@ -90,6 +146,7 @@ export function FitnessInput() {
                 onChange={(e) => setSleep(e.target.value)}
                 className="h-12 text-lg rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500"
                 placeholder="0"
+                inputMode="decimal"
               />
               <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">
                 hours
@@ -116,6 +173,7 @@ export function FitnessInput() {
                 onChange={(e) => setWater(e.target.value)}
                 className="h-12 text-lg rounded-xl border-gray-200 focus:border-cyan-500 focus:ring-cyan-500"
                 placeholder="0"
+                inputMode="decimal"
               />
               <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">
                 liters
@@ -123,86 +181,45 @@ export function FitnessInput() {
             </div>
           </Card>
 
+          {/* Error Message */}
+          {error && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <p className="text-sm text-amber-700">{error}</p>
+            </div>
+          )}
+
           {/* Save Button */}
           <Button
             onClick={handleSave}
-            className={`w-full h-14 rounded-xl shadow-md text-base transition-all ${
+            disabled={isSaving}
+            className={`w-full h-14 rounded-xl shadow-md text-base transition-all touch-action-manipulation ${
               saved
                 ? "bg-emerald-500 hover:bg-emerald-600"
-                : "bg-blue-500 hover:bg-blue-600"
-            } text-white`}
+                : "bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
+            } text-white disabled:opacity-50 disabled:cursor-not-allowed`}
           >
-            {saved ? (
+            {isSaving ? (
               <>
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
+                <svg className="w-5 h-5 mr-2 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.25" />
+                  <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="2" />
+                </svg>
+                Saving...
+              </>
+            ) : saved ? (
+              <>
+                <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 Saved Successfully!
               </>
             ) : (
               <>
                 <Save className="w-5 h-5 mr-2" />
-                Save Data
+                Save Fitness Data
               </>
             )}
           </Button>
-
-          {/* Tips */}
-          <Card className="p-5 bg-blue-50 border border-blue-200 rounded-xl">
-            <h4 className="font-medium text-blue-900 mb-2">Daily Tips</h4>
-            <ul className="space-y-2 text-sm text-blue-800">
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5">•</span>
-                <span>Aim for 10,000 steps daily for optimal health</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5">•</span>
-                <span>Quality sleep improves medication effectiveness</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 mt-0.5">•</span>
-                <span>Stay hydrated, especially when taking medicine</span>
-              </li>
-            </ul>
-          </Card>
-
-          {/* Historical Data */}
-          <div className="pt-6 mt-8 border-t border-gray-100">
-            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-gray-500" />
-              Past 7 Days
-            </h3>
-            <div className="space-y-3">
-              {[
-                { day: "Tue", date: "Apr 14", steps: "10,210", sleep: "8.0", water: "2.5" },
-                { day: "Mon", date: "Apr 13", steps: "7,840", sleep: "6.5", water: "1.8" },
-                { day: "Sun", date: "Apr 12", steps: "12,500", sleep: "9.0", water: "3.0" },
-                { day: "Sat", date: "Apr 11", steps: "11,200", sleep: "7.5", water: "2.8" },
-              ].map((record, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
-                  <div className="flex flex-col w-12 text-center">
-                    <span className="font-semibold text-gray-900 text-sm">{record.day}</span>
-                    <span className="text-xs text-gray-500">{record.date}</span>
-                  </div>
-                  <div className="flex-1 flex justify-around ml-2 border-l border-gray-100 pl-4 py-1">
-                     <span className="text-xs font-medium text-gray-600 flex flex-col items-center"><Footprints className="w-4 h-4 text-blue-400 mb-1"/> {record.steps}</span>
-                     <span className="text-xs font-medium text-gray-600 flex flex-col items-center"><Moon className="w-4 h-4 text-indigo-400 mb-1"/> {record.sleep}h</span>
-                     <span className="text-xs font-medium text-gray-600 flex flex-col items-center"><Droplets className="w-4 h-4 text-cyan-400 mb-1"/> {record.water}L</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

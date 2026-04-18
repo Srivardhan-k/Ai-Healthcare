@@ -1,3 +1,31 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+/* ==== MOBILE/TOUCH OPTIMIZATIONS ==== */
+/* Prevent default touch delay on interactive elements */
+button, 
+a, 
+input, 
+select, 
+textarea,
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in input fields */
+input, 
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Improve tap feedback without affecting desktop */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  [role="button"] {
+    --tw-ring-offset-width: 0;
+  }
+}

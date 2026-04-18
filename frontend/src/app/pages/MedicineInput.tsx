@@ -11,6 +11,7 @@ export function MedicineInput() {
   const [isScanning, setIsScanning] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [scanResult, setScanResult] = useState("");
+  const [cameraError, setCameraError] = useState<string | null>(null);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -25,6 +26,7 @@ export function MedicineInput() {
   const startCamera = async () => {
     setIsScanning(true);
     setScanResult("");
+    setCameraError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { facingMode: "environment" } 
@@ -35,16 +37,21 @@ export function MedicineInput() {
       }
     } catch (err) {
       console.error("Camera access denied or unavailable", err);
-      alert("Failed to access camera. Please check permissions!");
+      const errorMsg = "Failed to access camera. Please check permissions!";
+      setCameraError(errorMsg);
       setIsScanning(false);
     }
   };
 
   const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
-      videoRef.current.srcObject = null;
+    try {
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    } catch (err) {
+      console.error("Error stopping camera:", err);
     }
     setIsScanning(false);
   };
@@ -54,26 +61,27 @@ export function MedicineInput() {
     if (!videoRef.current || !canvasRef.current) return;
     
     setIsProcessing(true);
+    setCameraError(null);
     const video = videoRef.current;
     const canvas = canvasRef.current;
     
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const context = canvas.getContext("2d");
-    if (!context) return;
-    
-    if (video.videoWidth === 0 || video.videoHeight === 0) {
-      alert("No valid camera frame detected! Cannot perform OCR without an active local video feed.");
-      setIsProcessing(false);
-      stopCamera();
-      return;
-    }
-    
-    // Draw current video frame to hidden canvas
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    // Run Tesseract Optical Character Recognition
     try {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Canvas context unavailable");
+      
+      if (video.videoWidth === 0 || video.videoHeight === 0) {
+        setCameraError("No valid camera frame detected. Please ensure camera is active.");
+        setIsProcessing(false);
+        stopCamera();
+        return;
+      }
+      
+      // Draw current video frame to hidden canvas
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      // Run Tesseract Optical Character Recognition
       const result = await Tesseract.recognize(canvas, 'eng', {
         logger: m => console.log(m) // Optional progress logger
       });
@@ -83,7 +91,7 @@ export function MedicineInput() {
       console.log("OCR Extracted:", extractedText);
 
       // Simple heuristic: Try to find the longest block of alpha letters which might be the medicine name
-      const words = extractedText.replace(/[^a-zA-Z\s]/g, "").split(/\s+/);
+      const words = extractedText.replace(/[^a-zA-Z\s]/g, "").split(/\s+/).filter(w => w.length > 0);
       const longestWord = words.reduce((a, b) => a.length > b.length ? a : b, "");
       
       if (longestWord.length > 3) {
@@ -95,7 +103,7 @@ export function MedicineInput() {
       
     } catch (err) {
       console.error("OCR Extraction failed", err);
-      alert("Failed to read text. Please try again or type manually.");
+      setCameraError("Failed to read text. Please try again or type manually.");
     } finally {
       setIsProcessing(false);
       stopCamera();

@@ -27,6 +27,7 @@ def create_app():
     from app.routes.scheduler import scheduler_bp
     from app.routes.alerts import alerts_bp
     from app.routes.risk import risk_bp
+    from app.routes.chat import chat_bp  # NEW: AI Chatbot
 
     app.register_blueprint(profile_bp, url_prefix='/api')
     app.register_blueprint(medicines_bp, url_prefix='/api')
@@ -34,6 +35,7 @@ def create_app():
     app.register_blueprint(scheduler_bp, url_prefix='/api')
     app.register_blueprint(alerts_bp, url_prefix='/api')
     app.register_blueprint(risk_bp, url_prefix='/api')
+    app.register_blueprint(chat_bp, url_prefix='/api')  # NEW: Chat routes
 
     @app.route('/api/health')
     def health_check():
