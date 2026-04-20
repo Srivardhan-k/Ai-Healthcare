@@ -121,7 +121,7 @@ npm install
 - Create .env file inside backend:
 
 PORT=5175
-AI_API=// http://localhost:11434/api/generate//
+AI_API= // http: //localhost: 11434/api/generate //
 
 * Run AI Model (Required)
 
